@@ -1,6 +1,7 @@
 # MusicPlayerUI Framework
 ### About this repository
 Here you can found all the UI related components used in MusicPlayerApp for iOS (see <<link TBA>>).
+> * MusicPlayerApp is a WIP project that creates a simplier iOS Music-App using MusicKit and AppleMusic APIs. Based on a single view UI that tries to make more easier naviage throght you music library no matters it is based on Apple cloud services or just the standard file-based library. More information TBA.
 
 ![Interface Overview](/docs/resources/musicplayer-ui-overview.gif)
 
