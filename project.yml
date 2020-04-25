@@ -1,0 +1,8 @@
+name: MusicPlayerUI
+options:
+  bundleIdPrefix: com.molayab.musicplayer-ui
+targets:
+  MusicPlayerUI:
+    type: framework
+    platform: iOS
+    sources: [MusicPlayerUI]
