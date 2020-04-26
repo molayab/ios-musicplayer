@@ -6,7 +6,10 @@
 //
 
 public protocol Playable {
+    /// Returns the current playable state, playing, paused or stopped.
     var state: PlayableState { get }
+    /// Returns the context of the playable item a.k.a metadata.
+    var context: TrackInfo { get }
 
     func play()
     func pause()
