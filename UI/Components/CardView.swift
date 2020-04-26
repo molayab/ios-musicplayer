@@ -82,3 +82,12 @@ public struct CardView: View {
         self.squareSize = squareSize
     }
 }
+
+struct CardView_Previews: PreviewProvider {
+    static var previews: some View {
+        CardView(title: "Sample title",
+                 subtitle: "Sample subtitle",
+                 coverArt: nil,
+                 squareSize: 0.0)
+    }
+}
