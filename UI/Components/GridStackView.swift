@@ -31,3 +31,11 @@ public struct GridStackView<Content: View>: View {
         }
     }
 }
+
+struct GridStackView_Previews: PreviewProvider {
+    static var previews: some View {
+        GridStackView(rows: 5, columns: 5) { _, _ in
+            Text("Some text.")
+        }
+    }
+}

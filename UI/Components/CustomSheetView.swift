@@ -27,3 +27,10 @@ public struct CustomSheetView: View {
         }
     }
 }
+
+struct CustomSheetView_Previews: PreviewProvider {
+    static var previews: some View {
+        CustomSheetView(currentHeight: .constant(10),
+                        movingOffset: .constant(10))
+    }
+}
