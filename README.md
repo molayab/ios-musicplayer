@@ -24,7 +24,11 @@ Before continuing we should advise that some MusicKit APIs are buggy and unstabl
 
 ### In-dev UI "tentative" preview
 
-![Interface Overview](/Docs/Resources/musicplayer-ui-overview.gif)
+![Interface Overview](/docs/resources/musicplayer-ui-overview.gif)
+
+### [WIP][Design] Home Alpha Screen
+
+![Home Alpha](/docs/resources/design-home-alpha.png)
 
 ## Components
 
