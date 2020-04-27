@@ -24,13 +24,18 @@ Before continuing we should advise that some MusicKit APIs are buggy and unstabl
 
 ## Components
 
+### Overall Design
+
+*WIP
+![Home Alpha](/docs/resources/design-home-alpha.png)
+
 We have separate UI-related documentation, the overall design is following our dev-art first approach, keeping in mind our single-view approach. Check the component's documentation [here](/UI/Components/README.md).
 
 If you are a designer or would like to contribute with the UI/UX experience design do not doubt to create an issue with your proposal, we will review it asap. Remember to create a Merge Request (MR) with the asset change, and remember to ONLY USE NON-COPYRIGHTED ASSETS. We aren't trying to theft anyone ;)
 
 For this project we are using:
 
-- ***Material Icons Set*** available under Apache license version 2.0. - [](https://material.io/resources/icons/?style=round)
+- ***[Material Icons Set](https://material.io/resources/icons/?style=round)*** available under Apache license version 2.0.
 
 The MVP version of the app is trying to have included the following screens:
 
@@ -40,11 +45,6 @@ The MVP version of the app is trying to have included the following screens:
 - Detail Screen
 - Listable Screen
 - Player Screen
-
-### Overall Design
-
-*WIP
-![Home Alpha](/docs/resources/design-home-alpha.png)
 
 ## How to build
 
