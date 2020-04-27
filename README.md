@@ -22,6 +22,12 @@ You'll see some folders in the project, we tried to simplify and decouple the ov
 
 Before continuing we should advise that some MusicKit APIs are buggy and unstable, Apple should fix those as soon as possible, but we don't have control over the backlog, so be careful contributing.
 
+## Core Engine
+
+Core Engine or simply Core is our abstraction of a Music player is it. It was influenced by the build-in Apple MusicLibray flow, trying to move it to a cleanest and Swifty way to define the API. The whole API is inspired by a "fluent" human-like way to express the library and player interactions.
+
+It defines two conceps **Player/Playable** and **Queue/Query**. For more information checkout our latest Core's documentation [here](/Core/README.md).
+
 ## Components
 
 ### Overall Design
