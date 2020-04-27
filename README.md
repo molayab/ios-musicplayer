@@ -22,43 +22,29 @@ You'll see some folders in the project, we tried to simplify and decouple the ov
 
 Before continuing we should advise that some MusicKit APIs are buggy and unstable, Apple should fix those as soon as possible, but we don't have control over the backlog, so be careful contributing.
 
-### In-dev UI "tentative" preview
-
-![Interface Overview](/docs/resources/musicplayer-ui-overview.gif)
-
-### [WIP][Design] Home Alpha Screen
-
-![Home Alpha](/docs/resources/design-home-alpha.png)
-
 ## Components
 
-All components MUST be written for SwiftUI.
+We have separate UI-related documentation, the overall design is following our dev-art first approach, keeping in mind our single-view approach. Check the component's documentation [here](/UI/Components/README.md).
+
+If you are a designer or would like to contribute with the UI/UX experience design do not doubt to create an issue with your proposal, we will review it asap. Remember to create a Merge Request (MR) with the asset change, and remember to ONLY USE NON-COPYRIGHTED ASSETS. We aren't trying to theft anyone ;)
+
+For this project we are using:
+
+- ***Material Icons Set*** available under Apache license version 2.0. - [](https://material.io/resources/icons/?style=round)
+
+The MVP version of the app is trying to have included the following screens:
+
+- Home Screen
+  - Floating MiniPlayer Screen
+- Search Screen
+- Detail Screen
+- Listable Screen
+- Player Screen
 
 ### Overall Design
 
-TBD
-
-### Public Components
-
- 1. GridStackView - ??
- 2. CardView
- 3. HomeSectionView
- 4. NavigationHeaderView
- 5. SheetView - ??
- 6. ProgressBarView
- 7. MiniPlayerView
- 8. BluredView - ??
- 9. SearchBarView
- 10. CustomSheetView - ??
-
-### Internal Components
-
- 1. GridStackView - TBD
- 2. SheetView - TBD
- 3. BluredView - TBD
- 4. CustomSheetView - TBD
-
-For more information, check documentation in *docs/components/*
+*WIP
+![Home Alpha](/docs/resources/design-home-alpha.png)
 
 ## How to build
 
