@@ -47,7 +47,10 @@ targets:
   UI:
     type: framework
     platform: iOS
-    sources: [UI]
+    sources: 
+      - UI
+      - UI/Resources/Assets.xcassets
+      - UI/Resources/Colors.xcassets
   Core:
     type: framework
     platform: iOS

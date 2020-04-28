@@ -8,7 +8,7 @@
 import UIKit
 
 public final class Theme {
-    public enum Colors: String {
+    public enum Colors: String, CaseIterable {
         case backgroundPrimaryColor
         case backgroundSecundaryColor
         case redTintColor
@@ -22,7 +22,7 @@ public final class Theme {
         
     }
 
-    public let colors = Colors()
+    public let colors = Colors.self
     public let fonts = Fonts()
 
     public static let `default` = Theme()
