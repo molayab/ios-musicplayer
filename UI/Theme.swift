@@ -12,9 +12,11 @@ public final class Theme {
         case backgroundPrimaryColor
         case backgroundSecundaryColor
         case redTintColor
+        case textPrimaryColor
+        case textSecundaryColor
 
         public var colorized: UIColor {
-            return UIColor(named: rawValue) ?? .black
+            return UIColor(named: rawValue, in: Bundle(for: Theme.self), compatibleWith: nil) ?? .cyan
         }
     }
 
