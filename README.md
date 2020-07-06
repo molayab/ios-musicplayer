@@ -4,6 +4,10 @@ OpenMusicPlayer for iOS tries to simplify the way that we interact with the musi
 
 OpenMusicPlayer is inspired by minimalistic design, simple UX, and flatten design patterns. Thinking in that way, the application is made following just a single view pattern, there you'll have everything you need to interact with your built-in and/or Apple Music library.
 
+###### July 2020
+
+> This project is now targeting iOS 14 and it will use the new SwiftUI's LifeCycle. See https://medium.com/better-programming/swiftuis-new-app-lifecycle-and-replacements-for-appdelegate-and-scenedelegate-in-ios-14-c9cf4a2367a9
+
 ## About this repository
 
 This repository is fully inspired by commercial alternatives to Apple's iOS music app. However, I fully agree with the OpenSource initiative, so I decided to start this small project. If you would like to contribute with me, with us. Do not doubt to share your contribution, we are glad to review it. However, please read and validate that your contribution is following our community rules and the code follows our style. Read **Contribute** section for more info.
