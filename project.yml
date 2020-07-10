@@ -1,16 +1,16 @@
 name: OpenMusicPlayer
 options:
-  xcodeVersion: "11.3"
+  xcodeVersion: "12.0"
   minimumXcodeGenVersion: "2.11.0"
   createIntermediateGroups: true
   deploymentTarget:
-    iOS: "13.0"
-  bundleIdPrefix: com.molayab.musicplayer-ui
+    iOS: "14.0"
+  bundleIdPrefix: com.molayab.musicplayer
 settings:
   base:
     SDKROOT: "iphoneos"
     VERSIONING_SYSTEM: "apple-generic"
-    SWIFT_VERSION: "5.0"
+    SWIFT_VERSION: "5.2"
     CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED: YES
   configs:
     Debug:
@@ -30,6 +30,23 @@ settings:
       BUILD_LIBRARY_FOR_DISTRIBUTION: YES
 targets:
   App:
+    info:
+        path: App/Info.plist
+        properties:
+            UIApplicationSceneManifest:
+                UIApplicationSupportsMultipleScenes: true
+            UIApplicationSupportsIndirectInputEvents: true
+            UILaunchScreen: ""
+            UIRequiredDeviceCapabilities: [armv7]
+            UISupportedInterfaceOrientations:
+                - UIInterfaceOrientationPortrait
+                - UIInterfaceOrientationLandscapeLeft
+                - UIInterfaceOrientationLandscapeRight
+            UISupportedInterfaceOrientations:
+                - UIInterfaceOrientationPortrait
+                - UIInterfaceOrientationPortraitUpsideDown
+                - UIInterfaceOrientationLandscapeLeft
+                - UIInterfaceOrientationLandscapeRight
     platform: iOS
     type: application
     sources: [App]
@@ -45,6 +62,8 @@ targets:
     dependencies:
       - target: App
   UI:
+    info:
+        path: UI/Info.plist
     type: framework
     platform: iOS
     sources: 
@@ -52,6 +71,8 @@ targets:
       - UI/Resources/Assets.xcassets
       - UI/Resources/Colors.xcassets
   Core:
+    info:
+        path: Core/Info.plist
     type: framework
     platform: iOS
     sources: [Core]
