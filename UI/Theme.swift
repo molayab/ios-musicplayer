@@ -26,6 +26,7 @@ public final class Theme {
 
     public let colors = Colors.self
     public let fonts = Fonts()
+    public let mainScreenSize: CGRect = UIScreen.main.bounds
 
     public static let `default` = Theme()
     private init() { }

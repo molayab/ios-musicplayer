@@ -3,7 +3,9 @@ import SwiftUI
 
 struct ContentView: View {
     @ViewBuilder var body: some View {
-        HomeView(presenter: HomeViewPresenter())
+        PlayerContainerView {
+            HomeView(presenter: HomeViewPresenter())
+        }
     }
 }
 

@@ -12,11 +12,21 @@ struct HomeView: View {
     @ObservedObject private var viewModel: ViewModel
     
     var body: some View {
-        VStack {
-            Button("Hello", action: {
-                viewModel.presenter?.fetchStarredItems()
-            })
-            viewModel.testViewModel.map { Text($0.title) }
+        NavigationView {
+            VStack(alignment: .leading) {
+                MiniMenuView(presenter: MiniMenuPresenter())
+                
+                VStack(alignment: .leading) {
+                    Text("Discover")
+                        .font(.title)
+                        .padding(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/, 15)
+                    
+                    PlayableItemCollectionView(
+                        presenter: DiscoverPlayableItemCollectionPresenter())
+                }
+                Spacer()
+            }
+            .navigationBarTitle(Text("Music"))
         }
     }
     

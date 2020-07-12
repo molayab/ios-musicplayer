@@ -33,12 +33,15 @@ public struct PlayableItemView: View {
         VStack {
             Image(uiImage: coverArtImage)
                 .resizable()
-                .frame(maxWidth: 200, maxHeight: 200)
                 .cornerRadius(8)
+                .aspectRatio(contentMode: .fit)
             Text(title)
+                .font(.caption)
+                .bold()
                 .foregroundColor(Color(Constants.colors.textPrimaryColor.colorized))
             subtitle.map {
                 Text($0)
+                    .font(.caption)
                     .foregroundColor(
                         Color(Constants.colors.textSecundaryColor.colorized))
             }
