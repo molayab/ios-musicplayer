@@ -21,8 +21,8 @@ struct HomeView: View {
                         .font(.title)
                         .padding(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/, 15)
                     
-                    PlayableItemCollectionView(
-                        presenter: DiscoverPlayableItemCollectionPresenter())
+                    RediscoverItemCollectionView(
+                        presenter: RediscoverItemCollectionPresenter())
                 }
                 Spacer()
             }

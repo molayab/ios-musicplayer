@@ -6,20 +6,39 @@
 //
 
 public protocol Query {
-    static func allSongs() -> Self
-    static func allArtits() -> Self
-    static func allAlbums() -> Self
-    static func allPlaylists() -> Self
-    static func allComposers() -> Self
-    static func allGenres() -> Self
-    static func allCompilations() -> Self
-
-    var groupType: Any { get set }
+    var items: [TrackInfo]? { get }
+    var collections: [TrackInfo]? { get }
 
     func addFilter(_ filter: QueryFilter)
     func removeFilter(_ filter: QueryFilter)
+    
+    init(initialSet: QueryFilter.InitialSet)
 }
 
 public struct QueryFilter {
-    // TODO
+    public enum Property {
+        case title
+        case artist
+        case playCount
+    }
+    
+    public enum ComparisonType {
+        case equals
+        case contains
+    }
+    
+    public enum InitialSet {
+        case songs
+        case albums
+    }
+    
+    var property: Property
+    var value: Any?
+    var comparisonType: ComparisonType?
+    
+    public init(property: Property, value: Any?, comparisonType: ComparisonType?) {
+        self.comparisonType = comparisonType
+        self.value = value
+        self.property = property
+    }
 }

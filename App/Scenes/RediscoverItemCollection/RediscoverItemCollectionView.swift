@@ -3,11 +3,11 @@
 import SwiftUI
 import UI
 
-protocol PlayableItemCollectionViewProtocol: AnyObject {
-    func reload(items: [PlayableItemCollectionView.Item])
+protocol RediscoverItemCollectionViewProtocol: AnyObject {
+    func reload(items: [RediscoverItemCollectionView.Item])
 }
 
-struct PlayableItemCollectionView: View {
+struct RediscoverItemCollectionView: View {
     typealias Presenter = PlayableItemCollectionPresenterProtocol
     @ObservedObject private var viewModel: ViewModel
     
@@ -29,9 +29,10 @@ struct PlayableItemCollectionView: View {
     private func getGridStackView(row: Int, column: Int, maxColumns: Int) -> some View {
         let index = (column + (row * maxColumns))
         return viewModel.items[safe: index].map {
-            PlayableItemView(title: $0.title, subtitle: $0.subtitle)
+            PlayableItemView(title: $0.title,
+                             subtitle: $0.subtitle,
+                             coverArtImage: $0.artwork())
                 .frame(width: 125)
-            
         }
     }
     
@@ -42,10 +43,11 @@ struct PlayableItemCollectionView: View {
 
 // MARK: - ViewModels
 
-extension PlayableItemCollectionView {
+extension RediscoverItemCollectionView {
     struct Item {
         let title: String
         let subtitle: String
+        let artwork: (() -> UIImage?)
     }
     
     final class ViewModel: ObservableObject {
@@ -62,8 +64,8 @@ extension PlayableItemCollectionView {
     }
 }
 
-extension PlayableItemCollectionView.ViewModel: PlayableItemCollectionViewProtocol {
-    func reload(items: [PlayableItemCollectionView.Item]) {
+extension RediscoverItemCollectionView.ViewModel: RediscoverItemCollectionViewProtocol {
+    func reload(items: [RediscoverItemCollectionView.Item]) {
         self.items = items
     }
 }
@@ -72,6 +74,6 @@ extension PlayableItemCollectionView.ViewModel: PlayableItemCollectionViewProtoc
 
 struct PlayableItemCollectionView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayableItemCollectionView(presenter: DiscoverPlayableItemCollectionPresenter())
+        RediscoverItemCollectionView(presenter: RediscoverItemCollectionPresenter())
     }
 }

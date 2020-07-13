@@ -1,13 +1,8 @@
 //
-//  TrackInfo.swift
-//  Core
-//
-//  Created by Mateo Olaya Bernal on 26/04/20.
-//
 
 import UIKit
 
-public struct TrackInfo {
+public struct MediaItem {
     public let title: String
     public let artist: String?
     public let album: String?

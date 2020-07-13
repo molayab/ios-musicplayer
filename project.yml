@@ -47,6 +47,7 @@ targets:
                 - UIInterfaceOrientationPortraitUpsideDown
                 - UIInterfaceOrientationLandscapeLeft
                 - UIInterfaceOrientationLandscapeRight
+            NSAppleMusicUsageDescription: "This app requires access to play music"
     platform: iOS
     type: application
     sources: [App]
