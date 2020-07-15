@@ -8,12 +8,12 @@ protocol RediscoverItemCollectionViewProtocol: AnyObject {
 }
 
 struct RediscoverItemCollectionView: View {
-    typealias Presenter = PlayableItemCollectionPresenterProtocol
+    typealias Presenter = RediscoverItemCollectionPresenterProtocol
     @ObservedObject private var viewModel: ViewModel
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            GridStackView(rows: 1, columns: viewModel.maxItemsPerColumn) { row, column in
+            GridStackView(rows: 2, columns: viewModel.maxItemsPerColumn) { row, column in
                 self.getGridStackView(row: row, column: column, maxColumns: viewModel.maxItemsPerColumn)
                     .padding(.leading, 5)
                     .padding(.trailing, 5)

@@ -27,3 +27,9 @@ final class MiniMenuPresenter: MiniMenuPresenterProtocol {
         view?.reload(menuItems: menuItems)
     }
 }
+
+extension PresenterDependencies {
+    static func inject() -> MiniMenuPresenterProtocol {
+        return DependencyInjector.injectOnce(for: .test, singleton: MiniMenuPresenter())
+    }
+}

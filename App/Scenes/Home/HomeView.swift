@@ -11,22 +11,38 @@ struct HomeView: View {
     typealias Presenter = HomeViewPresenterProtocol
     @ObservedObject private var viewModel: ViewModel
     
+    var libraryPresenter: LibraryPresenterProtocol
+        = DependencyInjector.inject()
+    var rediscoverItemCollectionPresenter: RediscoverItemCollectionPresenterProtocol
+        = DependencyInjector.inject()
+    var miniMenuPresenter: MiniMenuPresenterProtocol
+        = DependencyInjector.inject()
+    
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
-                MiniMenuView(presenter: MiniMenuPresenter())
+                MiniMenuView(presenter: miniMenuPresenter)
                 
                 VStack(alignment: .leading) {
-                    Text("Discover")
-                        .font(.title)
+                    NavigationLink(destination: LibraryView(presenter: libraryPresenter)) {
+                        VStack(alignment: .leading) {
+                            Text("Your Library")
+                                .font(.headline)
+                                .accentColor(.primary)
+                            Text("Rediscover some items from your local library")
+                                .font(.subheadline)
+                                .accentColor(.secondary)
+                        }
                         .padding(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/, 15)
+                    }
                     
                     RediscoverItemCollectionView(
-                        presenter: RediscoverItemCollectionPresenter())
+                        presenter: rediscoverItemCollectionPresenter)
                 }
+                
                 Spacer()
             }
-            .navigationBarTitle(Text("Music"))
+            .navigationBarTitle(Text("Home"))
         }
     }
     

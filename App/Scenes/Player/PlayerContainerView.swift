@@ -10,6 +10,7 @@ struct PlayerContainerView<Content: View>: View {
             content()
             Spacer()
             Rectangle() // TODO: Set the player view
+                .background(Color(.darkGray).opacity(0.8))
                 .frame(minHeight: 85,
                        maxHeight: 85,
                        alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)

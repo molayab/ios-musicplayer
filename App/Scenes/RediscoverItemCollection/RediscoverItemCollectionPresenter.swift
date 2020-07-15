@@ -2,7 +2,7 @@
 
 import UI
 
-protocol PlayableItemCollectionPresenterProtocol {
+protocol RediscoverItemCollectionPresenterProtocol {
     var view: RediscoverItemCollectionViewProtocol? { get set }
     
     func fetchItems()
@@ -10,7 +10,7 @@ protocol PlayableItemCollectionPresenterProtocol {
 
 // MARK: - Available Presenters
 
-final class RediscoverItemCollectionPresenter: PlayableItemCollectionPresenterProtocol {
+final class RediscoverItemCollectionPresenter: RediscoverItemCollectionPresenterProtocol {
     struct Dependencies {
         var getRediscoverAlbumsUseCase: GetRediscoverAlbumsUseCaseProtocol = GetRediscoverAlbumsUseCase()
     }
@@ -36,3 +36,8 @@ final class RediscoverItemCollectionPresenter: PlayableItemCollectionPresenterPr
     }
 }
 
+extension PresenterDependencies {
+    static func inject() -> RediscoverItemCollectionPresenterProtocol {
+        return RediscoverItemCollectionPresenter()
+    }
+}

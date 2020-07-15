@@ -30,7 +30,7 @@ struct MiniMenuView: View {
         return viewModel.menuItems[safe: index].map { MiniMenuItemView(title: $0.title) }
     }
     
-    init(presenter: MiniMenuPresenterProtocol) {
+    init(presenter: Presenter) {
         self.viewModel = ViewModel(presenter: presenter)
     }
 }
