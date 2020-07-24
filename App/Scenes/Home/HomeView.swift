@@ -3,28 +3,47 @@
 import SwiftUI
 import UI
 
-protocol HomeViewProtocol: AnyObject {
+protocol HomeViewProtocol: SceneProtocol {
     func reloadSongsWith(context: [HomeView.SongItemViewModel])
 }
 
 struct HomeView: View {
+    struct Dependencies: ViewDependencies {
+        var homePresenter: HomeViewPresenterProtocol = inject()
+        var libraryPresenter: LibraryPresenterProtocol = inject()
+        var rediscoverItemCollectionPresenter: RediscoverItemCollectionPresenterProtocol = inject()
+        var miniMenuPresenter: MiniMenuPresenterProtocol = inject()
+    }
+    
     typealias Presenter = HomeViewPresenterProtocol
     @ObservedObject private var viewModel: ViewModel
     
-    var libraryPresenter: LibraryPresenterProtocol
-        = DependencyInjector.inject()
-    var rediscoverItemCollectionPresenter: RediscoverItemCollectionPresenterProtocol
-        = DependencyInjector.inject()
-    var miniMenuPresenter: MiniMenuPresenterProtocol
-        = DependencyInjector.inject()
+    private let dependencies: Dependencies
+    init(dependencies: Dependencies) {
+        self.dependencies = dependencies
+        self.viewModel = ViewModel(presenter: dependencies.homePresenter)
+    }
+    
+    var miniMenuView: some View {
+        MiniMenuView(presenter: dependencies.miniMenuPresenter)
+    }
+    
+    var rediscoverItemCollectionView: some View {
+        RediscoverItemCollectionView(
+            presenter: dependencies.rediscoverItemCollectionPresenter)
+    }
+    
+    var libraryView: some View {
+        LibraryView(presenter: dependencies.libraryPresenter)
+    }
     
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
-                MiniMenuView(presenter: miniMenuPresenter)
+                miniMenuView
                 
                 VStack(alignment: .leading) {
-                    NavigationLink(destination: LibraryView(presenter: libraryPresenter)) {
+                    NavigationLink(destination: libraryView) {
                         VStack(alignment: .leading) {
                             Text("Your Library")
                                 .font(.headline)
@@ -36,18 +55,13 @@ struct HomeView: View {
                         .padding(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/, 15)
                     }
                     
-                    RediscoverItemCollectionView(
-                        presenter: rediscoverItemCollectionPresenter)
+                    rediscoverItemCollectionView
                 }
                 
                 Spacer()
             }
             .navigationBarTitle(Text("Home"))
         }
-    }
-    
-    init(presenter: Presenter) {
-        self.viewModel = .init(presenter: presenter)
     }
 }
 
@@ -65,18 +79,16 @@ extension HomeView {
     }
     
     final class ViewModel: ObservableObject {
-        var presenter: Presenter?
-        init(presenter: Presenter?) {
+        var presenter: HomeViewPresenterProtocol?
+        init(presenter: HomeViewPresenterProtocol?) {
             self.presenter = presenter
-            self.presenter?.view = self
+            self.presenter?.usingView(self)
         }
         
         @Published var starredSongItems: [SongItemViewModel] = []
         @Published var testViewModel: TestViewModel?
     }
 }
-
-// MARK: - HomeView.ViewModel Proxy Iface
 
 extension HomeView.ViewModel: HomeViewProtocol {
     func reloadSongsWith(context: [HomeView.SongItemViewModel]) {
@@ -89,6 +101,6 @@ extension HomeView.ViewModel: HomeViewProtocol {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(presenter: HomeViewPresenter())
+        HomeView(dependencies: .init())
     }
 }

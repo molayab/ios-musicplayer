@@ -2,7 +2,7 @@
 
 import SwiftUI
 
-protocol LibraryViewProtocol: AnyObject {
+protocol LibraryViewProtocol: SceneProtocol {
 }
 
 struct LibraryView: View {
@@ -33,13 +33,13 @@ extension LibraryView {
         var presenter: Presenter?
         init(presenter: Presenter?) {
             self.presenter = presenter
-            self.presenter?.view = self
+            self.presenter?.usingView(self)
         }
         
         @Published var items: [Item] = []
     }
     
-    init(presenter: Presenter) {
+    init(presenter: Presenter?) {
         self.viewModel = ViewModel(presenter: presenter)
     }
 }
@@ -51,6 +51,6 @@ extension LibraryView.ViewModel: LibraryViewProtocol {
 
 struct LibraryView_Previews: PreviewProvider {
     static var previews: some View {
-        LibraryView(presenter: LibraryPresenter())
+        LibraryView(presenter: LibraryPresenter(dependencies: .init()))
     }
 }

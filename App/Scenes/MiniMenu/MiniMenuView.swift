@@ -3,7 +3,7 @@
 import SwiftUI
 import UI
 
-protocol MiniMenuViewProtocol: AnyObject {
+protocol MiniMenuViewProtocol: SceneProtocol {
     func reload(menuItems: [MiniMenuView.MenuItem])
 }
 
@@ -30,7 +30,7 @@ struct MiniMenuView: View {
         return viewModel.menuItems[safe: index].map { MiniMenuItemView(title: $0.title) }
     }
     
-    init(presenter: Presenter) {
+    init(presenter: Presenter?) {
         self.viewModel = ViewModel(presenter: presenter)
     }
 }
@@ -46,7 +46,7 @@ extension MiniMenuView {
         var presenter: Presenter?
         init(presenter: Presenter?) {
             self.presenter = presenter
-            self.presenter?.view = self
+            self.presenter?.usingView(self)
         }
         
         @Published var menuItems: [MenuItem] = []
@@ -66,6 +66,6 @@ extension MiniMenuView.ViewModel: MiniMenuViewProtocol {
 
 struct MiniMenuView_Previews: PreviewProvider {
     static var previews: some View {
-        MiniMenuView(presenter: MiniMenuPresenter())
+        MiniMenuView(presenter: MiniMenuPresenter(dependencies: nil))
     }
 }

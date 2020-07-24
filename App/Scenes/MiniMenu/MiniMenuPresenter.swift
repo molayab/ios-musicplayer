@@ -2,15 +2,28 @@
 
 import UI
 
-protocol MiniMenuPresenterProtocol {
-    var view: MiniMenuViewProtocol? { get set }
-    
+protocol MiniMenuPresenterProtocol: PresenterProtocol {
     func fetchMenuItems()
 }
 
-final class MiniMenuPresenter: MiniMenuPresenterProtocol {
+final class MiniMenuPresenter: Presenter, MiniMenuPresenterProtocol {
+    struct Dependencies: PresenterDependencies { }
+    
     weak var view: MiniMenuViewProtocol?
+    private let dependencies: Dependencies?
     private var menuItems: [MiniMenuView.MenuItem] = []
+    
+    init(dependencies: Dependencies?) {
+        self.dependencies = dependencies
+    }
+    
+    func usingView<View>(_ view: View?) where View: MiniMenuViewProtocol {
+        self.view = view
+    }
+    
+    func usingView<View>(_ view: View?) where View: SceneProtocol {
+        fatalError("Please use the correct view protocol to interact with this presenter, generic ones are not allowed.")
+    }
     
     func fetchMenuItems() {
         menuItems = [
@@ -28,8 +41,8 @@ final class MiniMenuPresenter: MiniMenuPresenterProtocol {
     }
 }
 
-extension PresenterDependencies {
+extension PresenterInjector {
     static func inject() -> MiniMenuPresenterProtocol {
-        return DependencyInjector.injectOnce(for: .test, singleton: MiniMenuPresenter())
+        return MiniMenuPresenter(dependencies: nil)
     }
 }

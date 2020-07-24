@@ -4,7 +4,7 @@ import SwiftUI
 struct ContentView: View {
     @ViewBuilder var body: some View {
         PlayerContainerView {
-            HomeView(presenter: HomeViewPresenter())
+            HomeView(dependencies: .init())
         }
     }
 }

@@ -3,7 +3,7 @@
 import SwiftUI
 import UI
 
-protocol RediscoverItemCollectionViewProtocol: AnyObject {
+protocol RediscoverItemCollectionViewProtocol: SceneProtocol {
     func reload(items: [RediscoverItemCollectionView.Item])
 }
 
@@ -36,7 +36,7 @@ struct RediscoverItemCollectionView: View {
         }
     }
     
-    init(presenter: Presenter) {
+    init(presenter: Presenter?) {
         self.viewModel = ViewModel(presenter: presenter)
     }
 }
@@ -54,7 +54,7 @@ extension RediscoverItemCollectionView {
         var presenter: Presenter?
         init(presenter: Presenter?) {
             self.presenter = presenter
-            self.presenter?.view = self
+            self.presenter?.usingView(self)
         }
         
         @Published var items: [Item] = []
@@ -74,6 +74,6 @@ extension RediscoverItemCollectionView.ViewModel: RediscoverItemCollectionViewPr
 
 struct PlayableItemCollectionView_Previews: PreviewProvider {
     static var previews: some View {
-        RediscoverItemCollectionView(presenter: RediscoverItemCollectionPresenter())
+        RediscoverItemCollectionView(presenter: RediscoverItemCollectionPresenter(dependencies: .init()))
     }
 }

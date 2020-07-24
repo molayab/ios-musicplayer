@@ -34,3 +34,11 @@ final class DependencyInjector {
         }
     }
 }
+
+// Usage Example:
+//
+// extension <<Layer>>Dependencies {
+//     static func inject() -> TestObjectProtocol {
+//         return DependencyInjector.injectOnce(for: .test, singleton: TestObject())
+//     }
+// }
