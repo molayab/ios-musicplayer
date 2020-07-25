@@ -50,7 +50,7 @@ protocol PresenterInjector { }
 protocol SceneInjector { }
 protocol ProviderDependencies: ProviderInjector { }
 protocol UseCaseDependencies: UseCaseInjector, ProviderInjector { }
-protocol PresenterDependencies: UseCaseInjector, PresenterInjector { }
+protocol PresenterDependencies: UseCaseInjector { }
 protocol ViewDependencies: PresenterInjector, SceneInjector { }
 
 
