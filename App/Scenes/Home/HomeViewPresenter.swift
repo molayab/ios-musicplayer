@@ -11,19 +11,19 @@ final class HomeViewPresenter: Presenter, HomeViewPresenterProtocol {
         init() { }
     }
     
-    weak var view: HomeViewProtocol?
+    weak var scene: HomeViewProtocol?
     private let dependencies: Dependencies?
     
     init(dependencies: Dependencies?) {
         self.dependencies = dependencies
     }
     
-    func usingView<View>(_ view: View?) {
-        register(view: view)
+    func usingScene<Scene>(_ scene: Scene?) {
+        register(scene: scene)
     }
     
     func fetchStarredItems() {
-        view?.reloadSongsWith(context: [.init(title: "Test", artist: "Test", album: "Test")])
+        scene?.reloadSongsWith(context: [.init(title: "Test", artist: "Test", album: "Test")])
     }
 }
 

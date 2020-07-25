@@ -13,7 +13,7 @@ final class RediscoverItemCollectionPresenter: Presenter, RediscoverItemCollecti
         var getRediscoverAlbumsUseCase: GetRediscoverAlbumsUseCaseProtocol = inject()
     }
     
-    weak var view: RediscoverItemCollectionViewProtocol?
+    weak var scene: RediscoverItemCollectionViewProtocol?
     private let dependencies: Dependencies?
     private var items: [RediscoverItemCollectionView.Item] = []
     
@@ -21,8 +21,8 @@ final class RediscoverItemCollectionPresenter: Presenter, RediscoverItemCollecti
         self.dependencies = dependencies
     }
     
-    func usingView<View>(_ view: View?) {
-        register(view: view)
+    func usingScene<Scene>(_ scene: Scene?) {
+        register(scene: scene)
     }
     
     func fetchItems() {
@@ -33,7 +33,7 @@ final class RediscoverItemCollectionPresenter: Presenter, RediscoverItemCollecti
                              artwork: item.artwork)
             }
             
-            self.view?.reload(items: items)
+            self.scene?.reload(items: items)
         }
     }
 }

@@ -9,15 +9,15 @@ final class LibraryPresenter: Presenter, LibraryPresenterProtocol {
         var getSongsUseCase: GetSongsUseCaseProtocol = inject()
     }
     
-    weak var view: LibraryViewProtocol?
+    weak var scene: LibraryViewProtocol?
     private let dependencies: Dependencies?
     
     init(dependencies: Dependencies?) {
         self.dependencies = dependencies
     }
     
-    func usingView<View>(_ view: View?) {
-        register(view: view)
+    func usingScene<Scene>(_ scene: Scene?) {
+        register(scene: scene)
     }
 }
 

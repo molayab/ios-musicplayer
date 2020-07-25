@@ -6,27 +6,23 @@ protocol Provider {
     associatedtype Dependencies: ProviderDependencies
     init(dependencies: Dependencies)
 }
-
 protocol UseCase {
     associatedtype Dependencies: UseCaseDependencies
     init(dependencies: Dependencies)
 }
-
 protocol PresenterProtocol {
-    func usingView<View>(_ view: View?)
+    func usingScene<Scene>(_ scene: Scene?)
 }
 protocol Presenter: AnyObject {
-    associatedtype View
+    associatedtype Scene
     associatedtype Dependencies: PresenterDependencies
     
-    var view: View? { get set }
-    
+    var scene: Scene? { get set }
     init(dependencies: Dependencies?)
 }
-
 extension Presenter {
-    func register<V>(view: V?) {
-        guard let view = view as? View else {
+    func register<S>(scene: S?) {
+        guard let scene = scene as? Scene else {
             fatalError("""
                 Please use the correct view protocol to interact with this presenter, generic ones
                 are not allowed.
@@ -34,11 +30,9 @@ extension Presenter {
             )
         }
         
-        self.view = view
+        self.scene = scene
     }
 }
-
-
 protocol SceneProtocol: AnyObject { }
 protocol Scene {
     associatedtype Dependencies: ViewDependencies
@@ -46,17 +40,14 @@ protocol Scene {
     associatedtype PP: PresenterProtocol
     init(presenter: PP?, dependencies: Dependencies?)
 }
-
 protocol SceneViewModel {
     associatedtype PP: PresenterProtocol
     init(presenter: PP?)
 }
-
 protocol ProviderInjector { }
 protocol UseCaseInjector { }
 protocol PresenterInjector { }
 protocol SceneInjector { }
-
 protocol ProviderDependencies: ProviderInjector { }
 protocol UseCaseDependencies: UseCaseInjector, ProviderInjector { }
 protocol PresenterDependencies: UseCaseInjector, PresenterInjector { }

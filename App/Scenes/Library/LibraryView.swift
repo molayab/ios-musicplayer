@@ -33,7 +33,7 @@ extension LibraryView {
         var presenter: Presenter?
         init(presenter: Presenter?) {
             self.presenter = presenter
-            self.presenter?.usingView(self)
+            self.presenter?.usingScene(self)
         }
         
         @Published var items: [Item] = []

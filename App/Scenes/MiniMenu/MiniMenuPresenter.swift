@@ -9,7 +9,7 @@ protocol MiniMenuPresenterProtocol: PresenterProtocol {
 final class MiniMenuPresenter: Presenter, MiniMenuPresenterProtocol {
     struct Dependencies: PresenterDependencies { }
     
-    weak var view: MiniMenuViewProtocol?
+    weak var scene: MiniMenuViewProtocol?
     private let dependencies: Dependencies?
     private var menuItems: [MiniMenuView.MenuItem] = []
     
@@ -17,8 +17,8 @@ final class MiniMenuPresenter: Presenter, MiniMenuPresenterProtocol {
         self.dependencies = dependencies
     }
     
-    func usingView<View>(_ view: View?) {
-        register(view: view)
+    func usingScene<Scene>(_ scene: Scene?) {
+        register(scene: scene)
     }
     
     func fetchMenuItems() {
@@ -33,7 +33,7 @@ final class MiniMenuPresenter: Presenter, MiniMenuPresenterProtocol {
             .init(title: "Composers"),
         ]
         
-        view?.reload(menuItems: menuItems)
+        scene?.reload(menuItems: menuItems)
     }
 }
 

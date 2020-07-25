@@ -82,7 +82,7 @@ extension HomeView {
         var presenter: HomeViewPresenterProtocol?
         init(presenter: HomeViewPresenterProtocol?) {
             self.presenter = presenter
-            self.presenter?.usingView(self)
+            self.presenter?.usingScene(self)
         }
         
         @Published var starredSongItems: [SongItemViewModel] = []
