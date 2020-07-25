@@ -9,19 +9,16 @@ protocol GetRediscoverAlbumsUseCaseProtocol {
 
 final class GetRediscoverAlbumsUseCase: UseCase, GetRediscoverAlbumsUseCaseProtocol {
     struct Dependencies: UseCaseDependencies {
-        var albumsProvider: CoreLibraryProviderProtocol = CoreLibraryProvider(
-            dependencies: .init(
-                query: BuiltInQueryProvider(
-                    initialSet: .albums)))
+        var albumsProvider: CoreLibraryProviderProtocol = injectCoreLibraryAlbumSet()
     }
     
-    private let dependencies: Dependencies?
-    init(dependencies: Dependencies?) {
+    private let dependencies: Dependencies
+    init(dependencies: Dependencies) {
         self.dependencies = dependencies
     }
     
     func run(completion: @escaping ([MediaItem]) -> Void) {
-        dependencies?.albumsProvider.allCollections(usingFilters: nil) { mediaItems in
+        dependencies.albumsProvider.allCollections(usingFilters: nil) { mediaItems in
             let skipSum = mediaItems.reduce(0) { $0 + $1.skipCount }
             let context = mediaItems.shuffled().filter { mediaItem -> Bool in
                 let targetDate = Calendar.current.date(byAdding: .month, value: -3, to: Date())

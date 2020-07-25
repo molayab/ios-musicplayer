@@ -2,18 +2,42 @@
 
 import SwiftUI
 
+protocol Provider {
+    associatedtype Dependencies: ProviderDependencies
+    init(dependencies: Dependencies)
+}
+
 protocol UseCase {
     associatedtype Dependencies: UseCaseDependencies
-    init(dependencies: Dependencies?)
+    init(dependencies: Dependencies)
 }
 
 protocol PresenterProtocol {
-    func usingView<View: SceneProtocol>(_ view: View?)
+    func usingView<View>(_ view: View?)
 }
-protocol Presenter {
+protocol Presenter: AnyObject {
+    associatedtype View
     associatedtype Dependencies: PresenterDependencies
+    
+    var view: View? { get set }
+    
     init(dependencies: Dependencies?)
 }
+
+extension Presenter {
+    func register<V>(view: V?) {
+        guard let view = view as? View else {
+            fatalError("""
+                Please use the correct view protocol to interact with this presenter, generic ones
+                are not allowed.
+                """
+            )
+        }
+        
+        self.view = view
+    }
+}
+
 
 protocol SceneProtocol: AnyObject { }
 protocol Scene {
@@ -28,11 +52,13 @@ protocol SceneViewModel {
     init(presenter: PP?)
 }
 
+protocol ProviderInjector { }
 protocol UseCaseInjector { }
 protocol PresenterInjector { }
 protocol SceneInjector { }
 
-protocol UseCaseDependencies: UseCaseInjector { }
+protocol ProviderDependencies: ProviderInjector { }
+protocol UseCaseDependencies: UseCaseInjector, ProviderInjector { }
 protocol PresenterDependencies: UseCaseInjector, PresenterInjector { }
 protocol ViewDependencies: PresenterInjector, SceneInjector { }
 

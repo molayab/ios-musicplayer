@@ -8,8 +8,8 @@ protocol CoreLibraryProviderProtocol {
     func allCollections(usingFilters: [Core.QueryFilter]?, completion: ([MediaItem]) -> Void)
 }
 
-final class CoreLibraryProvider: CoreLibraryProviderProtocol {
-    struct Dependencies {
+final class CoreLibraryProvider: Provider, CoreLibraryProviderProtocol {
+    struct Dependencies: ProviderDependencies {
         var query: Query
     }
     
@@ -36,7 +36,8 @@ final class CoreLibraryProvider: CoreLibraryProviderProtocol {
                          isLoved: trackInfo.isLoved,
                          artwork: trackInfo.artwork,
                          skipCount: trackInfo.skipCount,
-                         lastPlayedDate: trackInfo.lastPlayedDate)
+                         lastPlayedDate: trackInfo.lastPlayedDate,
+                         dateAdded: trackInfo.dateAdded)
         }
         
         completion(songs ?? [])
@@ -56,9 +57,29 @@ final class CoreLibraryProvider: CoreLibraryProviderProtocol {
                          isLoved: trackInfo.isLoved,
                          artwork: trackInfo.artwork,
                          skipCount: trackInfo.skipCount,
-                         lastPlayedDate: trackInfo.lastPlayedDate)
+                         lastPlayedDate: trackInfo.lastPlayedDate,
+                         dateAdded: trackInfo.dateAdded)
         }
         
         completion(songs ?? [])
+    }
+}
+
+extension ProviderInjector {
+    static func injectCoreLibraryAlbumSet() -> CoreLibraryProviderProtocol {
+        return CoreLibraryProvider(
+            dependencies: .init(
+                query: Core.BuiltInQueryProvider(initialSet: .albums)
+            )
+        )
+    }
+    
+    static func injectCoreLibrarySongsSet() -> CoreLibraryProviderProtocol {
+        return CoreLibraryProvider(
+            dependencies: .init(
+                query: BuiltInQueryProvider(
+                    initialSet: .songs)
+            )
+        )
     }
 }

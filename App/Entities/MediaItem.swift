@@ -12,4 +12,5 @@ public struct MediaItem {
     public let artwork: (() -> UIImage?)
     public let skipCount: Int
     public let lastPlayedDate: Date?
+    public let dateAdded: Date
 }

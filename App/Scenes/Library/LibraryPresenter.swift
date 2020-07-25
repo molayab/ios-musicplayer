@@ -16,12 +16,8 @@ final class LibraryPresenter: Presenter, LibraryPresenterProtocol {
         self.dependencies = dependencies
     }
     
-    func usingView<View>(_ view: View?) where View: LibraryViewProtocol {
-        self.view = view
-    }
-    
-    func usingView<View>(_ view: View?) where View: SceneProtocol {
-        fatalError("Please use the correct view protocol to interact with this presenter, generic ones are not allowed.")
+    func usingView<View>(_ view: View?) {
+        register(view: view)
     }
 }
 

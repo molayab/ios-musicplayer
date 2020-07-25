@@ -73,7 +73,8 @@ public final class BuiltInQueryProvider: Query {
                      isLoved: true,
                      artwork: { return mediaItem.artwork?.image(at: .init(width: 150, height: 150)) },
                      skipCount: mediaItem.skipCount,
-                     lastPlayedDate: mediaItem.lastPlayedDate)
+                     lastPlayedDate: mediaItem.lastPlayedDate,
+                     dateAdded: mediaItem.dateAdded)
     }
 }
 
