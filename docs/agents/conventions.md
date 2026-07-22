@@ -50,6 +50,20 @@ concurrent code:
   its documented use inside non-async default-parameter initializers
   (`var x: XProtocol = inject()`), so that's a real design trade-off, not a
   drop-in swap.
+- **Two actors can't safely share one non-`Sendable` reference type.**
+  `Core/AudioEngine/MixingSession.swift` hit this directly: an earlier
+  version made each deck its own `actor` sharing one `AVAudioEngine`
+  (`AVAudioEngine` isn't `Sendable`), and the compiler correctly rejected it
+  ("sending risks causing data races") — nothing prevents the two actors
+  from touching the shared engine concurrently from different threads. The
+  fix wasn't to silence the error; it was to make `MixingSession` the *only*
+  actor in that graph, with the per-deck logic (`AudioEngineDeck`) as an
+  internal, non-actor, non-public class it exclusively owns. When two
+  stateful objects share a mutable, non-Sendable resource, they belong in
+  one actor, not two — reach for this pattern (owner actor + internal plain
+  classes) before reaching for `nonisolated(unsafe)`, which is only right
+  when you can point to actual manual synchronization backing it up (see the
+  `DependencyInjector` case above).
 - `BUILD_LIBRARY_FOR_DISTRIBUTION: YES` (module stability) is scoped to the
   `Core` and `UI` framework targets' Release config only, not applied
   project-wide. Applying it to `App` breaks Release builds: the app module

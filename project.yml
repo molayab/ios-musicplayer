@@ -4,7 +4,7 @@ options:
   minimumXcodeGenVersion: "2.11.0"
   createIntermediateGroups: true
   deploymentTarget:
-    iOS: "14.0"
+    iOS: "26.0"
   bundleIdPrefix: com.molayab.musicplayer
 settings:
   base:
@@ -37,17 +37,14 @@ targets:
                 UIApplicationSupportsMultipleScenes: true
             UIApplicationSupportsIndirectInputEvents: true
             UILaunchScreen: ""
-            UIRequiredDeviceCapabilities: [armv7]
-            UISupportedInterfaceOrientations:
-                - UIInterfaceOrientationPortrait
-                - UIInterfaceOrientationLandscapeLeft
-                - UIInterfaceOrientationLandscapeRight
             UISupportedInterfaceOrientations:
                 - UIInterfaceOrientationPortrait
                 - UIInterfaceOrientationPortraitUpsideDown
                 - UIInterfaceOrientationLandscapeLeft
                 - UIInterfaceOrientationLandscapeRight
             NSAppleMusicUsageDescription: "This app requires access to play music"
+            LSSupportsOpeningDocumentsInPlace: true
+            UIFileSharingEnabled: true
     platform: iOS
     type: application
     sources: [App]
