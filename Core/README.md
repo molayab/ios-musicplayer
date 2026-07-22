@@ -2,7 +2,8 @@
 
 Core has two layers, split by what they can and can't do with audio (see
 [docs/agents/viability.md](../docs/agents/viability.md) for the full
-reasoning):
+reasoning, or [docs/architecture-diagrams.md](../docs/architecture-diagrams.md)
+for the same thing as diagrams):
 
 ## Local DJ engine (primary)
 

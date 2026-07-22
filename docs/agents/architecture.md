@@ -24,8 +24,11 @@ frameworks in Release; `App` deliberately isn't (see conventions.md).
 ## Core: two layers, split by what they can do with audio
 
 `Core` has two independent halves — see
-[Core/README.md](../../Core/README.md) for the file-level catalog and
-[viability.md](viability.md) for the full reasoning behind the split.
+[Core/README.md](../../Core/README.md) for the file-level catalog,
+[viability.md](viability.md) for the full reasoning behind the split, and
+[architecture-diagrams.md](../architecture-diagrams.md) for the same thing
+as Mermaid diagrams (module map, the actor-ownership design, import/mixing
+sequence flows).
 
 ### Local DJ engine (primary — `Core/`, `Core/AudioEngine/`, `Core/Library/`, `Core/Analysis/`)
 
