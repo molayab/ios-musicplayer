@@ -5,6 +5,7 @@
 //  Created by Mateo Olaya Bernal on 26/04/20.
 //
 
+/// Apple Music bridge façade — see `Player.swift`.
 public final class PlayerController {
     private var playerProvider: Player! // = BuiltInMusicPlayerProvider()
 

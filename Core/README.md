@@ -1,27 +1,55 @@
 #  Core Engine
 
-In order to abstract the deeper complexity in the MusicKit framework, and looking for a protocol-oriented and SOLID-like way to define our core engine. We created the following Core's public interface.
+Core has two layers, split by what they can and can't do with audio (see
+[docs/agents/viability.md](../docs/agents/viability.md) for the full
+reasoning, or [docs/architecture-diagrams.md](../docs/architecture-diagrams.md)
+for the same thing as diagrams):
 
-## Public Interface
+## Local DJ engine (primary)
 
-### Playable ***(protocol)***
-### Query ***(protocol)***
-### Player ***(protocol)***
-### TrackInfo ***(struct)***
-### PlayerController ***(class)***
+The user's own imported files, fully under app control via `AVAudioEngine`
+— raw PCM access, so this is where cue points, tempo/pitch, and
+simultaneous multi-deck playback live.
 
-## Overall Architecture
+- `Track` *(struct)* — a locally-imported file: metadata plus a
+  security-scoped bookmark.
+- `MixingSession` *(actor)* — owns the shared `AVAudioEngine` graph and both
+  decks, exposed as `DeckID`-scoped operations (`.a` / `.b`) rather than as
+  separate deck objects, because the engine and its decks are one
+  non-Sendable graph and have to live in a single actor isolation domain.
+- `DeckState` / `DeckID` / `CuePoint` *(value types)* — the public vocabulary
+  for `MixingSession`'s deck-scoped API.
+- `LocalLibraryStore` *(protocol)*, `FileLocalLibraryStore` *(actor)* — a
+  minimal JSON-backed index of imported tracks.
+- `TrackImporter` *(protocol)*, `FileTrackImporter` *(actor)* — turns picked
+  file URLs into `Track`s (bookmark + best-effort `AVAsset` metadata).
+- `TrackAnalyzer` *(protocol)*, `UnimplementedTrackAnalyzer` *(struct)* — the
+  BPM/musical-key extension point. Deliberately unimplemented: there's no
+  first-party API for this and real DSP beat-detection is its own project;
+  see viability.md before picking this up.
 
-TBA
+## Apple Music bridge (secondary — `AppleMusicBridge/`)
 
-## Modular Capabilities
+`Playable` / `Query` / `Player` / `TrackInfo` / `PlayerController`, and their
+`MPMediaQuery`-backed implementations. This is the original 2020 design,
+kept but demoted: a single system-level playback stream for browsing/
+listening to the user's Apple Music library, **not** part of the deck/mixer
+surface. Apple Music catalog tracks are DRM-protected, so a single
+black-box stream really is the ceiling here — the single-queue shape that
+was wrong for DJ decks is the right shape for this.
 
-The overall Core's architecture was designed thinking in the possibility of exchange the libraries and player data source in order to be able to handle different providers rather than Apple Music. However, for the MVP we ONLY support built-in player and library capabilities included in MusicKit by Apple. Looking for a further provider expansion.
+`BuiltInMusicPlayerProvider` is still an unimplemented stub — see
+[docs/agents/state.md](../docs/agents/state.md) for what's actually needed to
+finish it (it's more than just wrapping `MPMusicPlayerController`: `Query`
+doesn't currently retain enough information to build a playback queue from
+its results).
 
-### Limitations
+## Contributing
 
-Due to Apple's MusicKit limitations, you can only have ONE provider working at the same time. It means that via the configuration you will have to choose if, for example, use Apple Music, or Spotify and go on. Making LIKE-IMPOSSIBLE creates a shared queue with mixed content. However, we will perform further investigations.
-
-### Contributing
-
-If you are looking to contribute with the Core Engine, please follow our code style and ensure you are following the style before raising any MR, thanks!. Feel free to create a folder into _Providers/_ with all your needed stuff, remember that you will have to define just one public adapter of our **Player protocol** that will be registered on the Controller for further use. Check the build-in implementation for detailed code-base information.
+- Local DJ engine changes: keep `AVAudioEngine` state inside `MixingSession`'s
+  single actor isolation domain — don't reintroduce a second actor sharing
+  the same engine (that's exactly the Swift 6 data-race trap this design
+  avoids; see the file header comments in `AudioEngine/` for the reasoning).
+- Apple Music bridge changes: register a new provider by conforming to
+  `Player`, following the existing `BuiltInQueryProvider`/
+  `BuiltInMusicPlayerProvider` pattern in `AppleMusicBridge/Providers/`.

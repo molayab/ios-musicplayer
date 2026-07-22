@@ -1,16 +1,17 @@
 name: OpenMusicPlayer
 options:
-  xcodeVersion: "12.0"
+  xcodeVersion: "26.0"
   minimumXcodeGenVersion: "2.11.0"
   createIntermediateGroups: true
   deploymentTarget:
-    iOS: "14.0"
+    iOS: "26.0"
   bundleIdPrefix: com.molayab.musicplayer
 settings:
   base:
     SDKROOT: "iphoneos"
     VERSIONING_SYSTEM: "apple-generic"
-    SWIFT_VERSION: "5.2"
+    SWIFT_VERSION: "6"
+    SWIFT_APPROACHABLE_CONCURRENCY: YES
     CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED: YES
   configs:
     Debug:
@@ -27,7 +28,6 @@ settings:
       SWIFT_OPTIMIZATION_LEVEL: "-Osize"
       SWIFT_COMPILATION_MODE: "wholemodule"
       ASSETCATALOG_COMPILER_OPTIMIZATION: "space"
-      BUILD_LIBRARY_FOR_DISTRIBUTION: YES
 targets:
   App:
     info:
@@ -37,20 +37,20 @@ targets:
                 UIApplicationSupportsMultipleScenes: true
             UIApplicationSupportsIndirectInputEvents: true
             UILaunchScreen: ""
-            UIRequiredDeviceCapabilities: [armv7]
-            UISupportedInterfaceOrientations:
-                - UIInterfaceOrientationPortrait
-                - UIInterfaceOrientationLandscapeLeft
-                - UIInterfaceOrientationLandscapeRight
             UISupportedInterfaceOrientations:
                 - UIInterfaceOrientationPortrait
                 - UIInterfaceOrientationPortraitUpsideDown
                 - UIInterfaceOrientationLandscapeLeft
                 - UIInterfaceOrientationLandscapeRight
             NSAppleMusicUsageDescription: "This app requires access to play music"
+            LSSupportsOpeningDocumentsInPlace: true
+            UIFileSharingEnabled: true
     platform: iOS
     type: application
     sources: [App]
+    settings:
+      base:
+        SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
     dependencies:
       - target: Core
       - target: UI
@@ -60,6 +60,9 @@ targets:
     type: bundle.unit-test
     platform: iOS
     sources: [Tests/AppTests]
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
     dependencies:
       - target: App
   UI:
@@ -67,7 +70,13 @@ targets:
         path: UI/Info.plist
     type: framework
     platform: iOS
-    sources: 
+    settings:
+      base:
+        SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+      configs:
+        Release:
+          BUILD_LIBRARY_FOR_DISTRIBUTION: YES
+    sources:
       - UI
       - UI/Resources/Assets.xcassets
       - UI/Resources/Colors.xcassets
@@ -76,10 +85,17 @@ targets:
         path: Core/Info.plist
     type: framework
     platform: iOS
+    settings:
+      configs:
+        Release:
+          BUILD_LIBRARY_FOR_DISTRIBUTION: YES
     sources: [Core]
   CoreTests:
     type: bundle.unit-test
     platform: iOS
     sources: [Tests/CoreTests]
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
     dependencies:
       - target: Core

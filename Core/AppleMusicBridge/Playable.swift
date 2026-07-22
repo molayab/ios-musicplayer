@@ -5,6 +5,8 @@
 //  Created by Mateo Olaya Bernal on 26/04/20.
 //
 
+/// Apple Music bridge item — see `Player.swift`. No PCM/waveform access is
+/// possible for these (DRM), so this stays a coarse play/pause/stop surface.
 public protocol Playable {
     /// Returns the current playable state, playing, paused or stopped.
     var state: PlayableState { get }

@@ -14,21 +14,25 @@ and listen only — DRM makes Apple Music tracks unmixable, see
 [viability.md](docs/agents/viability.md)). Full detail:
 [purpose.md](docs/agents/purpose.md).
 
-**This pivot is an active investigation, not a finished design** — the
-current codebase still reflects the 2020 "Music.app alternative" framing and
-has no local-file support or working playback yet. Read
-[state.md](docs/agents/state.md) before assuming any feature works.
+**The pivot's `Core` redesign is decided and partially built** — `Core` now
+has a real local-file DJ engine (`MixingSession`, `Track`,
+`TrackImporter`, `LocalLibraryStore`) alongside the demoted Apple Music
+bridge. What's still missing is everything above `Core`: no App/UI screen
+calls into any of it yet, and BPM/key analysis is an intentionally
+unimplemented placeholder. Read [state.md](docs/agents/state.md) before
+assuming any *feature* (not just any Core type) works.
 
 ## Reference folder
 
 | Doc | Read it for |
 |---|---|
 | [docs/agents/purpose.md](docs/agents/purpose.md) | Product goal, DJ-first vs. Apple Music bridge, non-goals |
-| [docs/agents/viability.md](docs/agents/viability.md) | Why the pivot needs a `Core` redesign — DRM limits, `MPMediaQuery` vs. local files, multi-deck mixing, recommended sequencing |
-| [docs/agents/architecture.md](docs/agents/architecture.md) | Target layout, the custom Provider/UseCase/Presenter/Scene pattern, DI approach, `Core` protocols |
+| [docs/agents/viability.md](docs/agents/viability.md) | The investigation and decision record — DRM limits, `MPMediaQuery` vs. local files, multi-deck mixing, what was actually built vs. deferred |
+| [docs/agents/architecture.md](docs/agents/architecture.md) | Target layout, `Core`'s two layers, the custom Provider/UseCase/Presenter/Scene pattern, DI approach |
+| [docs/architecture-diagrams.md](docs/architecture-diagrams.md) | The same `Core` architecture as Mermaid diagrams — module map, the Swift 6 actor design behind `MixingSession`, import/mixing sequence flows |
 | [docs/agents/ui-standards.md](docs/agents/ui-standards.md) | Design principles, component catalog, theming, where UI code should live |
 | [docs/agents/state.md](docs/agents/state.md) | What's real vs. stubbed/placeholder right now — check before building on top of something |
-| [docs/agents/conventions.md](docs/agents/conventions.md) | Build/test commands, code style, injection pattern to follow |
+| [docs/agents/conventions.md](docs/agents/conventions.md) | Build/test commands, code style, injection pattern to follow, Swift 6 concurrency gotchas |
 
 ## Quick facts
 
@@ -51,10 +55,11 @@ xcodegen generate
    hardcoded placeholder data; don't assume "the UI shows X" means "X is a
    real data path."
 2. If the change touches playback, library data, or file import, read
-   [viability.md](docs/agents/viability.md) first — the existing `Core`
-   abstraction (`Player`/`Query`/`Playable`) is shaped for single-stream
-   Music-library playback and will likely need redesigning, not extending,
-   for DJ-style multi-deck local playback.
+   [viability.md](docs/agents/viability.md) first — `Core` already has two
+   separate layers for this (local DJ engine vs. Apple Music bridge, see
+   [architecture.md](docs/agents/architecture.md)); make sure new code lands
+   in the right one instead of extending `Player`/`Query` (the Apple Music
+   bridge's single-stream shape) to do something it structurally can't.
 3. Follow the existing Provider → UseCase → Presenter → Scene layering and
    its static-`inject()` DI convention ([architecture.md](docs/agents/architecture.md))
    rather than introducing a new pattern.

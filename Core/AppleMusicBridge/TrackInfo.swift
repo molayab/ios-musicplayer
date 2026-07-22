@@ -7,6 +7,8 @@
 
 import UIKit
 
+/// Apple Music bridge metadata — see `Player.swift`. Distinct from `Track`,
+/// which describes a locally-imported file the app fully controls.
 public struct TrackInfo {
     public let title: String
     public let artist: String?

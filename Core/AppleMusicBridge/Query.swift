@@ -5,6 +5,9 @@
 //  Created by Mateo Olaya Bernal on 26/04/20.
 //
 
+/// Apple Music bridge library query — see `Player.swift`. Browses the
+/// system-synced Music library (`MPMediaQuery`), not arbitrary local files;
+/// local-file browsing lives in `LocalLibraryStore`.
 public protocol Query {
     var items: [TrackInfo]? { get }
     var collections: [TrackInfo]? { get }

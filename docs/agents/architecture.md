@@ -16,31 +16,67 @@ xcodegen generate
 | `CoreTests` | unit test bundle | `Tests/CoreTests` | `Core` |
 | `AppTests` | unit test bundle | `Tests/AppTests` | `App` |
 
-iOS 14 minimum deployment target, Swift 5.2 (both worth revisiting per
-[viability.md](viability.md)). `UI` and `Core` are `BUILD_LIBRARY_FOR_DISTRIBUTION`
-frameworks in Release.
+iOS 26 minimum deployment target, Swift 6 language mode (Xcode 26 / Swift 6.2
+toolchain — see [conventions.md](conventions.md#swift-6-concurrency) for what
+that means day to day). `UI` and `Core` are `BUILD_LIBRARY_FOR_DISTRIBUTION`
+frameworks in Release; `App` deliberately isn't (see conventions.md).
 
-## Core: the playback/library abstraction
+## Core: two layers, split by what they can do with audio
 
-Defined across `Core/Playable.swift`, `Core/Player.swift`, `Core/Query.swift`,
-`Core/TrackInfo.swift`, `Core/PlayerController.swift`:
+`Core` has two independent halves — see
+[Core/README.md](../../Core/README.md) for the file-level catalog,
+[viability.md](viability.md) for the full reasoning behind the split, and
+[architecture-diagrams.md](../architecture-diagrams.md) for the same thing
+as Mermaid diagrams (module map, the actor-ownership design, import/mixing
+sequence flows).
 
-- **`Playable`** — one playing/pausable/stoppable item + its `TrackInfo`.
+### Local DJ engine (primary — `Core/`, `Core/AudioEngine/`, `Core/Library/`, `Core/Analysis/`)
+
+- **`MixingSession`** *(actor)* — owns the shared `AVAudioEngine` graph and
+  both decks, exposing control through `DeckID`-scoped methods
+  (`load(_:into:)`, `play(_:)`, `setCrossfade(_:)`, ...) rather than handing
+  out separate deck objects.
+  **Why:** two decks sharing one `AVAudioEngine` — which is not
+  `Sendable` — cannot safely be two independent actors under Swift 6; the
+  compiler correctly rejects passing the shared engine into a second actor's
+  isolated storage ("sending risks causing data races"). Making
+  `MixingSession` the *only* actor in the graph, with `AudioEngineDeck` as
+  an internal (non-actor, non-public) implementation class it exclusively
+  owns, keeps the whole graph in one isolation domain. Don't reintroduce a
+  second actor here without solving that sharing problem first.
+- **`Track`** *(struct)* — a locally-imported file: metadata + a
+  security-scoped bookmark (`resolveSecurityScopedURL()`), not a live `URL`
+  — sandbox/iCloud paths can move between launches.
+- **`LocalLibraryStore`** (protocol) / **`FileLocalLibraryStore`** (actor) —
+  minimal JSON-file persistence for imported tracks. No SQLite/SwiftData;
+  revisit only if real query/filter needs show up.
+- **`TrackImporter`** (protocol) / **`FileTrackImporter`** (actor) — turns
+  picked file `URL`s into `Track`s (bookmark + best-effort `AVAsset`
+  metadata). The picker UI itself (`UIDocumentPickerViewController`) is an
+  App/UI concern and isn't wired up yet — see [state.md](state.md).
+- **`TrackAnalyzer`** (protocol) / **`UnimplementedTrackAnalyzer`** — the
+  BPM/musical-key extension point, deliberately left unimplemented (no
+  first-party API, real DSP work; see viability.md).
+
+### Apple Music bridge (secondary — `Core/AppleMusicBridge/`)
+
+The original 2020 design, relocated and demoted but otherwise **unchanged**:
+`Playable`, `Player`, `PlayerController`, `Query`/`QueryFilter`, `TrackInfo`,
+plus `Providers/BuiltInQueryProvider` (wraps `MPMediaQuery`) and
+`Providers/BuiltInMusicPlayerProvider` (still an empty stub).
+
 - **`Player`** — a queue-oriented transport: `setQueue`, `skipNext/Previous`,
-  a single `nowPlaying`. `PlayerController` is the concrete façade apps talk
-  to; it holds a swappable `Player` (`register(playerProvider:)`).
-- **`Query`** — a filterable source of `TrackInfo` items/collections
-  (`addFilter`, `QueryFilter` on title/artist/playCount).
-- Concrete providers live in `Core/Providers/`:
-  - `BuiltInQueryProvider` — wraps `MPMediaQuery` (MediaPlayer framework —
-    the system-synced Music library, **not** arbitrary local files).
-  - `BuiltInMusicPlayerProvider` — **empty stub**, no `Player` conformance
-    implemented yet.
-
-This shape (queue + single now-playing) matches a Music.app-style player.
-It does **not** support multi-deck simultaneous playback — see
-[viability.md](viability.md) for why that matters for the DJ pivot and how
-this layer likely needs to change.
+  a single `nowPlaying`. This single-queue shape was wrong as a model for DJ
+  decks, but it's the *right* shape here: Apple Music catalog tracks are
+  DRM-protected, so a single system-level black-box stream really is the
+  ceiling for this bridge. `PlayerController` is the concrete façade apps
+  talk to; it holds a swappable `Player` (`register(playerProvider:)`).
+- **`Query`** — a filterable source of `TrackInfo` items/collections from
+  the system-synced Music library — **not** arbitrary local files (that's
+  `LocalLibraryStore`'s job now).
+- `BuiltInMusicPlayerProvider` staying a stub is a known gap, not an
+  oversight of this reorganization — see [state.md](state.md) for exactly
+  what's missing before it can be implemented.
 
 ## App: custom light "clean architecture"
 

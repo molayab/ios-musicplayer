@@ -2,6 +2,7 @@
 
 import MediaPlayer
 
+/// Apple Music bridge — see `../Player.swift`.
 public final class BuiltInQueryProvider: Query {
     private var mediaQuery: MPMediaQuery!
     

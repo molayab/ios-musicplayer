@@ -1,8 +1,11 @@
 # Viability investigation: pivot to a local-file DJ library player
 
-Status: **investigation, not yet decided/implemented.** This document exists so an
-agent (or contributor) doesn't have to re-derive these constraints from scratch
-before touching `Core`.
+Status: **decided and partially implemented.** `Core` was re-architected
+along the lines this document recommends (see the Verdict section below for
+exactly what landed vs. what's still open). This document is kept as the
+decision record — an agent touching `Core` should still read it before
+assuming the shape of things, since several parts (BPM/key analysis, App-
+layer UI, the Apple Music bridge player) remain intentionally unbuilt.
 
 ## The pivot being considered
 
@@ -97,21 +100,37 @@ literal empty stub. Required subsystems:
 
 ## Verdict
 
-Feasible as an indie-scale project, but this is a **re-architecture of
-`Core`, not an extension of it**. Recommended sequencing:
+Feasible as an indie-scale project, and this was a **re-architecture of
+`Core`, not an extension of it**. What happened against the original
+recommended sequencing:
 
-1. Redesign `Core`'s player abstraction around a multi-deck/session model
-   instead of a single queue (`Player`/`Playable` rework).
-2. Build the local-file import + `AVAudioEngine` playback provider from
-   scratch — this is the actual product now, currently 0% built.
-3. Decide and scope BPM/key detection early; it gates several DJ features
-   (auto-sync, harmonic mixing) and has no first-party API.
-4. Keep `BuiltInQueryProvider`/`MPMediaQuery` (or migrate it to `MusicKit`)
-   demoted to the optional Apple Music bridge, feeding a separate,
-   simpler "browse & play one stream" surface — not the deck/mixer UI.
-5. Re-evaluate the `iOS 14` deployment target (`project.yml`) —
-   `AVAudioUnitTimePitch`-heavy DJ features and `MusicKit` both favor a more
-   current minimum OS; check current App Store minimums before committing.
+1. **Done.** `Core`'s player abstraction now has two layers instead of one
+   single-queue model: `MixingSession` (an actor owning the shared
+   `AVAudioEngine` graph, exposing deck-scoped control via `DeckID`) for
+   local playback, and the original `Player`/`Playable` shape kept —
+   unmodified — for the Apple Music bridge, where "one stream at a time"
+   is actually correct. See [architecture.md](architecture.md) for the
+   concurrency reasoning (two actors can't safely share one non-`Sendable`
+   `AVAudioEngine`, which is why decks are internal to `MixingSession`
+   rather than actors in their own right).
+2. **Done, base layer only.** `Track`, `TrackImporter`/`FileTrackImporter`
+   (bookmark + `AVAsset` metadata), `LocalLibraryStore`/
+   `FileLocalLibraryStore` (JSON-backed) and `AudioEngineDeck` all exist and
+   compile against a real `AVAudioEngine` graph. **Not done:** the
+   App/UI-side document-picker flow that actually calls `TrackImporter`
+   (`UIDocumentPickerViewController` is a UI concern, deliberately left to
+   the App/UI target — see [state.md](state.md)), and any SwiftUI deck/mixer
+   screen.
+3. **Scoped, not built.** `TrackAnalyzer` exists as a protocol with an
+   `UnimplementedTrackAnalyzer` placeholder — the extension point is real,
+   the DSP behind it isn't. Still the single biggest open unknown.
+4. **Done.** `BuiltInQueryProvider`/`MPMediaQuery` and the still-unimplemented
+   `BuiltInMusicPlayerProvider` moved into `Core/AppleMusicBridge/` verbatim
+   (no functional change — deliberately, to avoid a half-finished rewrite;
+   see [state.md](state.md) for the specific gap blocking
+   `BuiltInMusicPlayerProvider`). MusicKit migration is still a future
+   option, not required now.
+5. **Done.** `project.yml` deployment target is now iOS 26 (was iOS 14).
 
 See [architecture.md](architecture.md) for how this reshapes the existing
 `Provider`/`UseCase`/`Presenter` layers, and [state.md](state.md) for exactly
