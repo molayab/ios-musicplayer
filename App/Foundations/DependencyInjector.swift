@@ -9,11 +9,14 @@ final class DependencyInjector {
     /// The main idea is avoid singletons and use them only when are 100% required.
     /// For a simple injection just overload the default inject() static funcion
     ///  extending the protocol in your file context.
-    enum Key {
+    nonisolated enum Key: Hashable {
         case test
     }
-    
-    private static var instances: [Key: AnyObject] = [:]
+
+    /// Guarded exclusively by `dispatchQueue` below (readers via `.sync`,
+    /// writers via `.async(flags: .barrier)`) — the compiler can't see that
+    /// synchronization, hence the manual opt-out from isolation checking.
+    private nonisolated(unsafe) static var instances: [Key: AnyObject] = [:]
     private static let dispatchQueue = DispatchQueue(label: "app.dependency-injector.distpatchQueue",
                                                      attributes: .concurrent)
     

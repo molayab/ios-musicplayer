@@ -16,9 +16,11 @@ xcodegen generate
 | `CoreTests` | unit test bundle | `Tests/CoreTests` | `Core` |
 | `AppTests` | unit test bundle | `Tests/AppTests` | `App` |
 
-iOS 14 minimum deployment target, Swift 5.2 (both worth revisiting per
-[viability.md](viability.md)). `UI` and `Core` are `BUILD_LIBRARY_FOR_DISTRIBUTION`
-frameworks in Release.
+iOS 14 minimum deployment target (worth revisiting per
+[viability.md](viability.md)), Swift 6 language mode (Xcode 26 / Swift 6.2
+toolchain — see [conventions.md](conventions.md#swift-6-concurrency) for what
+that means day to day). `UI` and `Core` are `BUILD_LIBRARY_FOR_DISTRIBUTION`
+frameworks in Release; `App` deliberately isn't (see conventions.md).
 
 ## Core: the playback/library abstraction
 
